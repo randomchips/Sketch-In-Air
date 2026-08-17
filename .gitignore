@@ -1,0 +1,35 @@
+# Publish only the refined application, required assets, and submission documents.
+*
+
+!/.gitignore
+!/README.md
+!/requirements.txt
+!/app.py
+!/gesture_recognition.py
+!/penval.npy
+
+!/templates/
+!/templates/index.html
+!/templates/video.html
+!/templates/emoji.html
+
+!/static/
+!/static/styles/
+!/static/styles/mainpage.css
+
+!/emojinator_files/
+!/emojinator_files/gesture_recognizer.task
+!/emojinator_files/hand_emo/
+!/emojinator_files/hand_emo/1.png
+!/emojinator_files/hand_emo/2.png
+!/emojinator_files/hand_emo/3.png
+!/emojinator_files/hand_emo/4.png
+!/emojinator_files/hand_emo/5.png
+!/emojinator_files/hand_emo/6.png
+!/emojinator_files/hand_emo/8.png
+!/emojinator_files/hand_emo/10.png
+
+!/docs/
+!/docs/17MIS1031.pdf
+!/docs/17mis1031_updated.docx
+!/docs/swe4099 - Final.pptx

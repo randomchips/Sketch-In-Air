@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/mainpage.css') }}">
+  <title>Sketch in Air | Camera Studio</title>
+</head>
+<body class="home-page">
+  <header class="home-header">
+    <a class="home-brand" href="{{ url_for('index') }}" aria-label="Sketch in Air home">
+      <span class="home-brand-icon" aria-hidden="true">
+        <span class="icon-fallback">SI</span>
+        <i data-lucide="scan-line"></i>
+      </span>
+      <span class="home-brand-copy">
+        <strong>Sketch in Air</strong>
+        <small>Camera studio</small>
+      </span>
+    </a>
+
+    <div class="home-local-status">
+      <span aria-hidden="true"></span>
+      Local workspace
+    </div>
+  </header>
+
+  <main class="home-main">
+    <section class="home-intro" aria-labelledby="homeTitle">
+      <p>Creative computer vision</p>
+      <h1 id="homeTitle">Sketch in Air</h1>
+      <span>Choose a studio</span>
+    </section>
+
+    <nav class="home-modes" aria-label="Available studios">
+      <a class="home-mode-button home-mode-drawing" href="{{ url_for('video') }}">
+        <span class="home-mode-icon" aria-hidden="true">
+          <span class="icon-fallback">D</span>
+          <i data-lucide="pencil-line"></i>
+        </span>
+        <span class="home-mode-copy">
+          <small>Studio 01</small>
+          <strong>Air drawing</strong>
+        </span>
+        <span class="home-mode-arrow" aria-hidden="true">
+          <span class="icon-fallback">&#8594;</span>
+          <i data-lucide="arrow-right"></i>
+        </span>
+      </a>
+
+      <a class="home-mode-button home-mode-emoji" href="{{ url_for('emoji') }}">
+        <span class="home-mode-icon" aria-hidden="true">
+          <span class="icon-fallback">E</span>
+          <i data-lucide="hand"></i>
+        </span>
+        <span class="home-mode-copy">
+          <small>Studio 02</small>
+          <strong>Hand gestures</strong>
+        </span>
+        <span class="home-mode-arrow" aria-hidden="true">
+          <span class="icon-fallback">&#8594;</span>
+          <i data-lucide="arrow-right"></i>
+        </span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="home-footer">
+    <span>OpenCV</span>
+    <span>TensorFlow</span>
+    <span>Flask</span>
+  </footer>
+
+  <script>
+    function initializeHomeIcons() {
+      window.lucide.createIcons();
+      document.documentElement.classList.add('lucide-ready');
+    }
+  </script>
+  <script async src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" onload="initializeHomeIcons()"></script>
+</body>
+</html>

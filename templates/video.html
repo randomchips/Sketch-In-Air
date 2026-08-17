@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/mainpage.css') }}">
+  <title>Drawing Studio | Sketch in Air</title>
+</head>
+<body class="studio-page">
+  <header class="studio-header">
+    <a class="icon-button" href="{{ url_for('index') }}" aria-label="Back to home" title="Back to home">
+      <span class="icon-fallback" aria-hidden="true">&#8592;</span>
+      <i data-lucide="arrow-left" aria-hidden="true"></i>
+    </a>
+
+    <div class="studio-title">
+      <span>Sketch in Air</span>
+      <h1>Drawing studio</h1>
+    </div>
+
+    <div class="stream-status" id="streamStatus" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="statusText">Connecting</span>
+    </div>
+  </header>
+
+  <main class="studio-main">
+    <section class="stream-stage" id="streamStage" aria-label="Live air drawing canvas">
+      <div class="stream-placeholder" id="streamPlaceholder">
+        <i data-lucide="camera" aria-hidden="true"></i>
+        <span>Starting camera</span>
+      </div>
+      <img
+        class="video-stream"
+        id="videoStream"
+        src="{{ url_for('video_feed') }}"
+        alt="Live camera with the air drawing canvas"
+      >
+    </section>
+
+    <nav class="studio-actions" aria-label="Drawing stream actions">
+      <button class="action-button" id="saveFrame" type="button">
+        <i data-lucide="download" aria-hidden="true"></i>
+        <span>Save frame</span>
+      </button>
+      <button class="action-button" id="restartStream" type="button">
+        <i data-lucide="refresh-cw" aria-hidden="true"></i>
+        <span>Restart</span>
+      </button>
+      <button class="action-button" id="fullscreenStream" type="button">
+        <i data-lucide="maximize" aria-hidden="true"></i>
+        <span>Fullscreen</span>
+      </button>
+    </nav>
+  </main>
+
+  <canvas id="captureCanvas" hidden></canvas>
+  <script>
+    const feedUrl = "{{ url_for('video_feed') }}";
+    const stream = document.getElementById('videoStream');
+    const stage = document.getElementById('streamStage');
+    const placeholder = document.getElementById('streamPlaceholder');
+    const status = document.getElementById('streamStatus');
+    const statusText = document.getElementById('statusText');
+    const captureCanvas = document.getElementById('captureCanvas');
+
+    function setStreamState(state, label) {
+      status.dataset.state = state;
+      statusText.textContent = label;
+    }
+
+    stream.addEventListener('load', () => {
+      stream.classList.add('is-ready');
+      placeholder.hidden = true;
+      setStreamState('live', 'Camera live');
+    });
+
+    stream.addEventListener('error', () => {
+      stream.classList.remove('is-ready');
+      placeholder.hidden = false;
+      setStreamState('error', 'Camera unavailable');
+    });
+
+    document.getElementById('restartStream').addEventListener('click', () => {
+      setStreamState('loading', 'Reconnecting');
+      stream.classList.remove('is-ready');
+      placeholder.hidden = false;
+      stream.removeAttribute('src');
+      window.requestAnimationFrame(() => {
+        stream.src = `${feedUrl}?t=${Date.now()}`;
+      });
+    });
+
+    document.getElementById('saveFrame').addEventListener('click', () => {
+      if (!stream.naturalWidth || !stream.naturalHeight) {
+        return;
+      }
+
+      captureCanvas.width = stream.naturalWidth;
+      captureCanvas.height = stream.naturalHeight;
+      const context = captureCanvas.getContext('2d');
+      context.drawImage(stream, 0, 0, captureCanvas.width, captureCanvas.height);
+      captureCanvas.toBlob((blob) => {
+        if (!blob) {
+          return;
+        }
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `sketch-${Date.now()}.png`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }, 'image/png');
+    });
+
+    document.getElementById('fullscreenStream').addEventListener('click', () => {
+      if (stage.requestFullscreen) {
+        stage.requestFullscreen();
+      }
+    });
+
+    function initializeIcons() {
+      window.lucide.createIcons();
+      document.documentElement.classList.add('lucide-ready');
+    }
+  </script>
+  <script async src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" onload="initializeIcons()"></script>
+</body>
+</html>
